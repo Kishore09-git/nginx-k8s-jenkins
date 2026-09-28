@@ -70,7 +70,15 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                sh 'curl -sf --max-time 10 http://localhost:30080 | head -5'
+                sh '''
+         	 for i in $(seq 1 30); do
+                     ALB=$(kubectl get ingress nginx-demo -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+    		     [ -n "$ALB" ] && break
+           	     sleep 10
+                 done
+                 echo "ALB: $ALB"
+         	 curl -sf --max-time 15 --retry 10 --retry-delay 15 --retry-connrefused "http://$ALB:8080" | head -5
+       	       '''
             }
         }
     }
