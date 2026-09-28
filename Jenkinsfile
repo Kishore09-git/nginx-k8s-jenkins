@@ -52,9 +52,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 dir('Deploy') {
-                    sh 'sed "s|IMAGE_TAG|${BUILD_NUMBER}|g" deployment.yaml > deployment.rendered.yaml'
-                    sh 'grep "image:" deployment.rendered.yaml'
-                    sh 'kubectl apply -f deployment.rendered.yaml'
+                    sh 'sed "s|IMAGE_TAG|${BUILD_NUMBER}|g" deployment_alb.yaml > deployment_alb.rendered.yaml'
+                    sh 'grep "image:" deployment_alb.rendered.yaml'
+                    sh 'kubectl apply -f deployment_alb.rendered.yaml'
                 }
             }
         }
